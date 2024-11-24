@@ -54,7 +54,6 @@ android {
 
 dependencies {
 
-
     implementation(libs.androidx.core.ktx)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -84,10 +83,14 @@ dependencies {
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.gson.converter)
 
+    //gms
+    implementation (libs.play.services.location)
+
+    //permission
+    implementation (libs.accompanist.permissions)
 
     //gson
     implementation (libs.retrofit.gson.converter)
-
 
     //room
     implementation(libs.room.runtime)

@@ -1,65 +1,52 @@
 package com.islam.prayer
 
+import UiEvent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.azan.Azan
-import com.azan.Method
-import com.azan.astrologicalCalc.Location
-import com.azan.astrologicalCalc.SimpleDate
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.islam.prayer.presentation.main.MainScreen
+import com.islam.prayer.presentation.settings.SettingsScreen
 import com.islam.prayer.ui.theme.PrayerTheme
-import java.util.GregorianCalendar
+import com.islam.prayer.util.nav.Route
+import com.test.simpleapp.presentation.uiutil.surfaceColor
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             PrayerTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                    azan()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = surfaceColor()
+                ) {
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController = navController,
+                        startDestination = Route.MainRoute
+                    ){
+                        composable<Route.MainRoute> {
+                            MainScreen(
+                                onNavigate = {uiEvent: UiEvent.Navigate ->
+                                    navController.navigate(uiEvent.route)
+                                }
+                            )
+                        }
+                        composable<Route.SettingsRoute> {
+                            SettingsScreen()
+                        }
+                    }
                 }
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-fun azan() {
-    val today = SimpleDate(GregorianCalendar())
-    val location = Location(-96.9015296, 33.2136448, 2.0, 0)
-    val azan = Azan(location, Method.EGYPT_SURVEY)
-    val prayerTimes = azan.getPrayerTimes(today)
-    val imsaak = azan.getImsaak(today)
-
-    Log.d("alaa","----------------results------------------------")
-
-    Log.d("alaa","date ---> " + today.day + " / " + today.month + " / " + today.year)
-    Log.d("alaa","imsaak ---> $imsaak")
-    Log.d("alaa","Fajr ---> " + prayerTimes.fajr())
-    Log.d("alaa","sunrise --->" + prayerTimes.shuruq())
-    Log.d("alaa","Zuhr --->" + prayerTimes.thuhr())
-    Log.d("alaa","Asr --->" + prayerTimes.assr())
-
-    Log.d("alaa","Maghrib --->" + prayerTimes.maghrib())
-    Log.d("alaa","ISHA  --->" + prayerTimes.ishaa())
 }

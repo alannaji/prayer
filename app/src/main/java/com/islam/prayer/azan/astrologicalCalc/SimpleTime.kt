@@ -1,4 +1,4 @@
-package com.azan.astrologicalCalc
+package com.islam.prayer.azan.astrologicalCalc
 
 /**
  * this class encapsulates a number represented in DMS (Degrees,

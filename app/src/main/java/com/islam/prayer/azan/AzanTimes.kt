@@ -1,4 +1,4 @@
-package com.azan
+package com.islam.prayer.azan
 
 /**
  * Encapsulates the list of times time and shuruq time
@@ -9,7 +9,7 @@ class AzanTimes {
      * @return an array containing the list of prayer times including the
      * shuruq. The size of the array is 6.
      */
-    val times = arrayOf(Time(),Time(),Time(),Time(),Time(),Time())
+    val times = arrayOf(Time(), Time(), Time(), Time(), Time(), Time())
 
 
     /**

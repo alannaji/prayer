@@ -1,4 +1,4 @@
-package com.azan
+package com.islam.prayer.azan
 
 /**
  * This class is an enumeration of possible prayer and other

@@ -1,4 +1,4 @@
-package com.azan.astrologicalCalc
+package com.islam.prayer.azan.astrologicalCalc
 
 /**
  * Astro functions
@@ -85,7 +85,8 @@ object AstrologyFormulas {
     }
 
     fun getAstroValuesByDay(julianDay: Double,
-                            loc: Location, astro: Astro, topAstro: Astro) {
+                            loc: Location, astro: Astro, topAstro: Astro
+    ) {
         val ad = AstrologyDay()
 
         if (astro.jd == julianDay - 1) {
@@ -313,11 +314,17 @@ object AstrologyFormulas {
         V0 = 280.46061837 + 360.98564736629 * (JD - 2451545) + 0.000387933 * Math.pow(JC, 2.0) - Math.pow(JC, 3.0) / 38710000.0
         V = limitAngle(V0) + deltaPsi * Math.cos(Utils.DEG_TO_RAD(E))
 
-        RAn = Math.sin(Utils.DEG_TO_RAD(lamda)) * Math.cos(Utils.DEG_TO_RAD(E)) - Math.tan(Utils.DEG_TO_RAD(Gg)) * Math.sin(Utils.DEG_TO_RAD(E))
+        RAn = Math.sin(Utils.DEG_TO_RAD(lamda)) * Math.cos(Utils.DEG_TO_RAD(E)) - Math.tan(
+            Utils.DEG_TO_RAD(
+                Gg
+            )
+        ) * Math.sin(Utils.DEG_TO_RAD(E))
         RAd = Math.cos(Utils.DEG_TO_RAD(lamda))
         RA = limitAngle(Utils.RAD_TO_DEG(Math.atan2(RAn, RAd)))
 
-        DEC = Math.asin(Math.sin(Utils.DEG_TO_RAD(Gg)) * Math.cos(Utils.DEG_TO_RAD(E)) + (Math.cos(Utils.DEG_TO_RAD(Gg))
+        DEC = Math.asin(Math.sin(Utils.DEG_TO_RAD(Gg)) * Math.cos(Utils.DEG_TO_RAD(E)) + (Math.cos(
+            Utils.DEG_TO_RAD(Gg)
+        )
                 * Math.sin(Utils.DEG_TO_RAD(E))
                 * Math.sin(Utils.DEG_TO_RAD(lamda))))
 
@@ -330,7 +337,8 @@ object AstrologyFormulas {
     }
 
     fun computeTopAstro(loc: Location, astro: Astro,
-                        topAstro: Astro) {
+                        topAstro: Astro
+    ) {
         var i: Int
         var lHour: Double
         var SP: Double
@@ -347,23 +355,34 @@ object AstrologyFormulas {
 
             SP = 8.794 / (3600 * astro.rsum[i])
 
-            tU = Math.atan(0.99664719 * Math.tan(Utils.DEG_TO_RAD(loc
-                    .degreeLat)))
+            tU = Math.atan(0.99664719 * Math.tan(
+                Utils.DEG_TO_RAD(
+                    loc
+                        .degreeLat
+                )
+            ))
 
             tCos = Math.cos(tU) + loc.seaLevel / 6378140.0 * Math.cos(Utils.DEG_TO_RAD(loc.degreeLat))
 
-            tSin = 0.99664719 * Math.sin(tU) + loc.seaLevel / 6378140.0 * Math.sin(Utils.DEG_TO_RAD(loc.degreeLat))
+            tSin = 0.99664719 * Math.sin(tU) + loc.seaLevel / 6378140.0 * Math.sin(
+                Utils.DEG_TO_RAD(
+                    loc.degreeLat
+                )
+            )
 
-            tRA0 = -tCos * Math.sin(Utils.DEG_TO_RAD(SP)) * Math.sin(Utils
-                    .DEG_TO_RAD(lHour)) / (Math.cos(astro.dec[i]) - (tCos
+            tRA0 = -tCos * Math.sin(Utils.DEG_TO_RAD(SP)) * Math.sin(Utils.DEG_TO_RAD(lHour)) / (Math.cos(astro.dec[i]) - (tCos
                     * Math.sin(Utils.DEG_TO_RAD(SP))
                     * Math.cos(Utils.DEG_TO_RAD(lHour))))
 
             tRA = astro.ra[i] + Utils.RAD_TO_DEG(tRA0)
 
-            tDEC = Utils.RAD_TO_DEG(Math.atan2(
-                    (Math.sin(astro.dec[i]) - tSin * Math.sin(Utils.DEG_TO_RAD(SP))) * Math.cos(tRA0), Math.cos(astro.dec[i]) - (tCos * Math.sin(Utils.DEG_TO_RAD(SP))
-                    * Math.cos(Utils.DEG_TO_RAD(lHour)))))
+            tDEC = Utils.RAD_TO_DEG(
+                Math.atan2(
+                    (Math.sin(astro.dec[i]) - tSin * Math.sin(Utils.DEG_TO_RAD(SP))) * Math.cos(tRA0),
+                    Math.cos(astro.dec[i]) - (tCos * Math.sin(Utils.DEG_TO_RAD(SP))
+                            * Math.cos(Utils.DEG_TO_RAD(lHour)))
+                )
+            )
 
             topAstro.ra[i] = tRA
             topAstro.dec[i] = tDEC

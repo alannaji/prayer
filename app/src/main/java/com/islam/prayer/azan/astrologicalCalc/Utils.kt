@@ -1,4 +1,4 @@
-package com.azan.astrologicalCalc
+package com.islam.prayer.azan.astrologicalCalc
 
 object Utils {
     val INVALID_TRIGGER = -.999

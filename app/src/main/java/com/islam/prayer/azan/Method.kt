@@ -1,6 +1,6 @@
-package com.azan
+package com.islam.prayer.azan
 
-import com.azan.astrologicalCalc.Utils
+import com.islam.prayer.azan.astrologicalCalc.Utils
 
 class Method {
     var fajrAng: Double = 0.toDouble()

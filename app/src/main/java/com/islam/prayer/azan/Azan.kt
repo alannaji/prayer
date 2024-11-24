@@ -1,6 +1,11 @@
-package com.azan
+package com.islam.prayer.azan
 
-import com.azan.astrologicalCalc.*
+import com.islam.prayer.azan.astrologicalCalc.Astro
+import com.islam.prayer.azan.astrologicalCalc.AstrologyFormulas
+import com.islam.prayer.azan.astrologicalCalc.Location
+import com.islam.prayer.azan.astrologicalCalc.SimpleDate
+import com.islam.prayer.azan.astrologicalCalc.SimpleTime
+import com.islam.prayer.azan.astrologicalCalc.Utils
 import java.util.*
 
 
@@ -96,7 +101,8 @@ class Azan
     }
 
     internal fun getPrayerTimesByDay(method: Method?, dc: DayCouple, pt: AzanTimes,
-                                     type: PrayerTime) {
+                                     type: PrayerTime
+    ) {
         var i: Int
         var invalid: Int
         val th: Double
@@ -236,7 +242,8 @@ class Azan
                 }
 
             } else if (ext == ExtremeLatitude.GOOD_ALL || ext == ExtremeLatitude.GOOD_INVALID
-                    || ext == ExtremeLatitude.GOOD_DIF) {
+                    || ext == ExtremeLatitude.GOOD_DIF
+            ) {
                 /* Nearest Good Day */
                 exAstroPrev = astroCache
                 exAstroNext = astroCache
@@ -306,7 +313,8 @@ class Azan
                 }
             } else if (ext == ExtremeLatitude.SEVEN_NIGHT_ALWAYS || ext == ExtremeLatitude.SEVEN_NIGHT_INVALID
                     || ext == ExtremeLatitude.SEVEN_DAY_ALWAYS || ext == ExtremeLatitude.SEVEN_DAY_INVALID
-                    || ext == ExtremeLatitude.HALF_ALWAYS || ext == ExtremeLatitude.HALF_INVALID) {
+                    || ext == ExtremeLatitude.HALF_ALWAYS || ext == ExtremeLatitude.HALF_INVALID
+            ) {
 
 
                 /* xxxthamer: For clarity, we may need to move the HALF_* methods
@@ -322,7 +330,8 @@ class Azan
 
                 if (method.extremeLatitude == ExtremeLatitude.SEVEN_NIGHT_INVALID
                         || method.extremeLatitude == ExtremeLatitude.SEVEN_DAY_INVALID
-                        || method.extremeLatitude == ExtremeLatitude.HALF_INVALID) {
+                        || method.extremeLatitude == ExtremeLatitude.HALF_INVALID
+                ) {
                     if (tempPrayer[0] == 99.0) {
                         if (method.extremeLatitude == ExtremeLatitude.HALF_INVALID)
                             tempPrayer[0] = portion - method.fajrInv / 60.0
@@ -373,7 +382,8 @@ class Azan
         /* Apply intervals if set */
         if (method.extremeLatitude != ExtremeLatitude.MIN_INVALID
                 && method.extremeLatitude != ExtremeLatitude.HALF_INVALID
-                && method.extremeLatitude != ExtremeLatitude.HALF_ALWAYS) {
+                && method.extremeLatitude != ExtremeLatitude.HALF_ALWAYS
+        ) {
             if (method.fajrInv != 0)
                 tempPrayer[0] = tempPrayer[1] - method.fajrInv / 60.0
             if (method.ishaaInv != 0)
@@ -385,7 +395,14 @@ class Azan
         if (type == PrayerTime.IMSAAK || type == PrayerTime.NEXTFAJR) {
             base6hm(tempPrayer[0], method, pt.fajr(), type)
         } else {
-            val timeArray = arrayOf(PrayerTime.FAJR, PrayerTime.SHUROOQ, PrayerTime.THUHR, PrayerTime.ASSR, PrayerTime.MAGHRIB, PrayerTime.ISHAA)
+            val timeArray = arrayOf(
+                PrayerTime.FAJR,
+                PrayerTime.SHUROOQ,
+                PrayerTime.THUHR,
+                PrayerTime.ASSR,
+                PrayerTime.MAGHRIB,
+                PrayerTime.ISHAA
+            )
 
             i = 0
             while (i < 6) {
@@ -436,7 +453,8 @@ class Azan
         } else if (method.round == Rounding.SPECIAL || method.round == Rounding.AGRESSIVE) {
             if (type == PrayerTime.FAJR || type == PrayerTime.THUHR
                     || type == PrayerTime.ASSR || type == PrayerTime.MAGHRIB
-                    || type == PrayerTime.ISHAA || type == PrayerTime.NEXTFAJR) {
+                    || type == PrayerTime.ISHAA || type == PrayerTime.NEXTFAJR
+            ) {
                 if (method.round == Rounding.SPECIAL) {
                     if (sec >= Utils.DEFAULT_ROUND_SEC) {
                         bs += 1 / 60.0
@@ -662,7 +680,8 @@ class Azan
 
             tH = H - Utils.RAD_TO_DEG(astro.dra[1])
 
-            sunAlt = Utils.RAD_TO_DEG(Math.asin(Math.sin(Utils.DEG_TO_RAD(loc
+            sunAlt = Utils.RAD_TO_DEG(Math.asin(Math.sin(
+                Utils.DEG_TO_RAD(loc
                     .degreeLat)) * Math.sin(Utils.DEG_TO_RAD(B)) + (Math.cos(Utils.DEG_TO_RAD(loc.degreeLat))
                     * Math.cos(Utils.DEG_TO_RAD(B))
                     * Math.cos(Utils.DEG_TO_RAD(tH)))))
@@ -768,7 +787,8 @@ class Azan
             num = Math.sin(Utils.DEG_TO_RAD(loc.degreeLong) - Utils.DEG_TO_RAD(Utils.KAABA_LONG))
             denom = Math.cos(Utils.DEG_TO_RAD(loc.degreeLat)) * Math
                     .tan(Utils.DEG_TO_RAD(Utils.KAABA_LAT)) - Math.sin(Utils.DEG_TO_RAD(loc.degreeLat)) * Math
-                    .cos(Utils.DEG_TO_RAD(loc.degreeLong) - Utils
+                    .cos(
+                        Utils.DEG_TO_RAD(loc.degreeLong) - Utils
                             .DEG_TO_RAD(Utils.KAABA_LONG))
             return SimpleTime(Utils.RAD_TO_DEG(Math.atan2(num, denom)))
 
