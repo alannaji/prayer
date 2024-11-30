@@ -2,9 +2,13 @@ package com.islam.prayer.presentation.main
 
 import UiEvent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -15,14 +19,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.islam.prayer.presentation.main.state.UiState
 import com.islam.prayer.ui.theme.Red20
+import com.test.simpleapp.presentation.uiutil.bodyLargeStyle
 import com.test.simpleapp.presentation.uiutil.bodyMediumStyle
+import com.test.simpleapp.presentation.uiutil.primaryColor
 import com.test.simpleapp.presentation.uiutil.shapeMedium
 import com.test.simpleapp.presentation.uiutil.surfaceColor
 import com.test.simpleapp.util.nav.NavUtil.ObserveNavEvent
@@ -41,7 +50,7 @@ fun MainScreen(
         )
     )
     LaunchedEffect(locationPermission.allPermissionsGranted) {
-        mainViewModel.fetchLocation()
+        mainViewModel.initialize()
     }
 
     ObserveNavEvent(flow = mainViewModel.uiEvent) { uiEvent ->
@@ -57,39 +66,52 @@ fun MainScreen(
         contentAlignment = Alignment.Center
     ) {
         if (!locationPermission.allPermissionsGranted) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "Location permission is required to proceed.",
-                    style = bodyMediumStyle(),
-                    textAlign = TextAlign.Center
-                )
-                TextButton(
-                    onClick = { locationPermission.launchMultiplePermissionRequest() },
-                    modifier = Modifier.wrapContentSize(),
-                    shape = shapeMedium(),
-                    colors = ButtonDefaults.textButtonColors(
-                        containerColor = Red20
-                    )
-                ) {
-                    Text(
-                        text = "Grant Permission",
-                        style = bodyMediumStyle(),
-                    )
-                }
-            }
+            EnableLocationPermission(locationPermission)
         } else {
-
             when (uiState) {
                 UiState.Loading -> {
                     CircularProgressIndicator()
                 }
-
                 is UiState.Success -> {
-                    val location = (uiState as UiState.Success).location
+                    val mainState = (uiState as UiState.Success).mainState
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(surfaceColor()),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        val isDailyQuranEnabled = mainState.isDailyQuranEnabled
+                        if (isDailyQuranEnabled){
+                            Text(
+                                text = "Qul howa allah 2a7ad allahu alsamad",
+                                style = bodyLargeStyle(),
+                                color = primaryColor(),
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        Text(
+                            text = "Fajr Prayer",
+                            style = bodyMediumStyle(),
+                            color = primaryColor(),
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.height(20.dp))
+                        Text(
+                            text = "Thuhur Prayer",
+                            style = bodyMediumStyle(),
+                            color = primaryColor(),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    /*val location = (uiState as UiState.Success).location
                     Text(
                         text = "Latitude: ${location.latitude}, Longitude: ${location.longitude}",
-                        style = bodyMediumStyle()
-                    )
+                        style = bodyMediumStyle(),
+                        fontWeight = FontWeight.Bold
+                    )*/
                 }
 
                 UiState.Error -> {
@@ -100,6 +122,32 @@ fun MainScreen(
                     )
                 }
             }
+        }
+    }
+}
+
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+private fun EnableLocationPermission(locationPermission: MultiplePermissionsState) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = "Location permission is required to proceed.",
+            style = bodyMediumStyle(),
+            textAlign = TextAlign.Center
+        )
+        TextButton(
+            onClick = { locationPermission.launchMultiplePermissionRequest() },
+            modifier = Modifier.wrapContentSize(),
+            shape = shapeMedium(),
+            colors = ButtonDefaults.textButtonColors(
+                containerColor = Red20
+            )
+        ) {
+            Text(
+                text = "Grant Permission",
+                style = bodyMediumStyle(),
+            )
         }
     }
 }

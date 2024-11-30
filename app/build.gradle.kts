@@ -83,6 +83,9 @@ dependencies {
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.gson.converter)
 
+    //Launch Darkly
+    implementation (libs.launchdarkly.launchdarkly.android.client.sdk)
+
     //gms
     implementation (libs.play.services.location)
 
