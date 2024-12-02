@@ -16,11 +16,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.islam.prayer.domain.model.Prayer
+import com.islam.prayer.presentation.main.util.DateTimeUtil
 import com.test.simpleapp.presentation.uiutil.bodyMediumStyle
 import com.test.simpleapp.presentation.uiutil.primaryColor
 import com.test.simpleapp.presentation.uiutil.shapeMedium
@@ -87,6 +89,9 @@ fun TextComponent(
     time: LocalTime,
     modifier: Modifier = Modifier,
 ) {
+    val formattedTime = remember{
+        DateTimeUtil.formatLocalTime(time)
+    }
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -97,7 +102,7 @@ fun TextComponent(
             style = bodyMediumStyle()
         )
         Text(
-            text = time.toString(),
+            text = formattedTime,
             style = bodyMediumStyle()
         )
     }

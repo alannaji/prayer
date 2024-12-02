@@ -1,6 +1,7 @@
 package com.islam.prayer.presentation.main
 
 import UiEvent
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.islam.prayer.domain.model.Prayer
@@ -8,6 +9,7 @@ import com.islam.prayer.domain.util.PrayerManager
 import com.islam.prayer.domain.util.PrayerManagerFactory
 import com.islam.prayer.presentation.main.state.MainState
 import com.islam.prayer.presentation.main.state.UiState
+import com.islam.prayer.util.AppConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,21 +34,34 @@ class MainViewModel @Inject constructor(
     fun initialize() {
 
         viewModelScope.launch {
-            _uiState.value = UiState.Loading
+            reduceState { UiState.Loading }
 
             runCatching {
-                prayerManager = prayerManagerFactory.createPrayerManager()
+                if (!::prayerManager.isInitialized) {
+                    prayerManager = prayerManagerFactory.createPrayerManager()
+                }
                 val prayers: List<Prayer> = prayerManager.mapPrayerTimesToPrayers()
                 MainState(prayers = prayers)
 
             }.onSuccess { mainState ->
-                _uiState.value = UiState.Success(mainState)
+                reduceState { UiState.Success(mainState) }
             }.onFailure { error ->
-                _uiState.value = UiState.Error(
-                    message = error.message ?: "An unknown error occurred",
-                    throwable = error
-                )
+                reduceState {
+                    logError(error)
+                    UiState.Error(
+                        message = error.message ?: "An unknown error occurred",
+                        throwable = error
+                    )
+                }
             }
         }
+    }
+
+    private fun reduceState(action: (UiState) -> UiState) {
+        _uiState.value = action(_uiState.value)
+    }
+
+    private fun logError(error: Throwable) {
+        Log.d(AppConstants.TAG, "Error occurred: ${error.message}") // Replace with proper logging
     }
 }
