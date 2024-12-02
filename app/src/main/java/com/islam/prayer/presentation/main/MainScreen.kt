@@ -75,9 +75,10 @@ fun MainScreen(
                             .align(Alignment.Center)
                     )
                 }
-                UiState.Error -> {
+                is UiState.Error -> {
+                    val errorMsg = (uiState as UiState.Error).message?:"Oops Something went wrong"
                     Text(
-                        text = "Error fetching location",
+                        text = errorMsg,
                         style = bodyMediumStyle(),
                         color = Red20
                     )

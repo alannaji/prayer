@@ -8,7 +8,8 @@ import com.islam.prayer.data.repimpl.LDTogglesRepImpl
 import com.islam.prayer.data.repimpl.LocationRepImpl
 import com.islam.prayer.domain.rep.LDTogglesRep
 import com.islam.prayer.domain.rep.LocationRep
-import com.islam.prayer.util.AppConstants
+import com.islam.prayer.domain.util.PrayerManager
+import com.islam.prayer.domain.util.PrayerManagerFactory
 import com.islam.prayer.util.AppConstants.TAG
 import com.launchdarkly.logging.LDLogLevel
 import com.launchdarkly.sdk.LDContext
@@ -38,6 +39,12 @@ object AppModule {
         fusedLocationProviderClient,
         app
     )
+    @Provides
+    @Singleton
+    fun providesPrayerManagerFactory(
+        locationRep: LocationRep
+    ):PrayerManagerFactory = PrayerManagerFactory(locationRep)
+
 
     @Provides
     @Singleton

@@ -1,23 +1,18 @@
-package com.islam.prayer.presentation.main.util
+package com.islam.prayer.domain.util
 
 import com.islam.prayer.azan.AzanTimes
 import com.islam.prayer.azan.Time
+import com.islam.prayer.domain.model.Prayer
+import com.islam.prayer.domain.model.PrayerInfo
+import com.islam.prayer.domain.model.PrayerType
 import java.time.LocalTime
-
-enum class PrayerType(val displayName:String) {
-    FAJR("Fajr"),
-    THUHR("Thuhr"),
-    ASSR("Assr"),
-    MAGHRIB("Maghrib"),
-    ISHAA("Ishaa");
-}
 
 class PrayerManager(
     private val azanTimes: AzanTimes
 ) {
     private val currentTime: LocalTime = LocalTime.now()
 
-    val prayerTimesMap: Map<PrayerType, LocalTime> by lazy {
+    private val prayerTimesMap: Map<PrayerType, LocalTime> by lazy {
         mapOf(
             PrayerType.FAJR to convertToLocalTime(azanTimes.fajr()),
             PrayerType.THUHR to convertToLocalTime(azanTimes.thuhr()),
@@ -36,14 +31,26 @@ class PrayerManager(
         )
     }
 
-    fun isCurrent(prayerType: PrayerType): Boolean {
+    fun mapPrayerTimesToPrayers(): List<Prayer> {
+        return PrayerType.entries.map { prayerType ->
+            val prayerInfo = PrayerInfo(
+                name = prayerType.displayName,
+                time = prayerTimesMap[prayerType]!!,
+                isCurrent = isCurrent(prayerType),
+                isFinished = isFinished(prayerType)
+            )
+            prayerType.toPrayer(prayerInfo)
+        }
+    }
+
+    private fun isCurrent(prayerType: PrayerType): Boolean {
         val startTime = prayerTimesMap[prayerType] ?: return false
         val endTime = nextPrayerTimesMap[prayerType] ?: return false
 
         return isBetween(startTime, endTime)
     }
 
-    fun isFinished(prayer: PrayerType): Boolean {
+    private fun isFinished(prayer: PrayerType): Boolean {
         val endTime = nextPrayerTimesMap[prayer] ?: return false
         return if (prayer == PrayerType.ISHAA)
             false

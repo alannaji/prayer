@@ -1,6 +1,5 @@
 package com.islam.prayer.domain.model
 
-import com.islam.prayer.azan.Time
 import java.time.LocalTime
 
 sealed class Prayer(val prayerInfo: PrayerInfo){
@@ -11,8 +10,6 @@ sealed class Prayer(val prayerInfo: PrayerInfo){
     data class Isha(val info: PrayerInfo) : Prayer(info)
 
 }
-
-
 data class PrayerInfo(
     val name:String,
     val time:LocalTime = LocalTime.now(),
@@ -21,5 +18,24 @@ data class PrayerInfo(
     val isFinished:Boolean=false,
     val wasPrayed:Boolean = false
 )
+
+enum class PrayerType(val displayName:String) {
+    FAJR("Fajr"),
+    THUHR("Thuhr"),
+    ASSR("Assr"),
+    MAGHRIB("Maghrib"),
+    ISHAA("Ishaa");
+
+    fun toPrayer(info: PrayerInfo): Prayer {
+        return when (this) {
+            FAJR -> Prayer.Fajr(info)
+            THUHR -> Prayer.Thuhur(info)
+            ASSR -> Prayer.Assr(info)
+            MAGHRIB -> Prayer.Maghrib(info)
+            ISHAA -> Prayer.Isha(info)
+        }
+    }
+}
+
 
 
